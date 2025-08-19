@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<!-- 사용자 CSS 추가-->
+<th:block layout:fragment="css">
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+		crossorigin="anonymous">
+
+	<style>
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.fieldError {
+	color: #bd2130;
+}
+
+a {
+	text-decoration: none;
+}
+
+.head { /*지역, 도시, 레벨, 종류, 글쓰기 버튼*/
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-bottom: 35px;
+}
+
+.btn-kiwi {
+	background-color: #70ACB1;
+	color: white;
+	border-color: #666;
+}
+
+.btn-kiwi:hover {
+	color: white;
+	background-color: #70ACB1;
+	border-color: #7cc;
+	justify-content: space-between;
+}
+
+.time { /*리스트 안 시간*/
+	font-weight: bold;
+	font-size: x-large;
+	margin-left: 23px;
+	margin-top: 10px;
+}
+
+.no { /*비활성화 버튼 - 마감*/
+	background-color: #E0E0E0;
+	color: black;
+	border-color: #606060;
+	width: 100px;
+}
+
+.no:hover {
+	color: black;
+	background-color: #E0E0E0;
+	border-color: #606060;
+	justify-content: space-between;
+}
+
+.ok { /*리스트 목록의 버튼 - 신청*/
+	width: 100px;
+}
+
+.btn-cancel {
+	background-color: #D5D5D5;
+	color: black;
+	border-color: #666;
+}
+
+.ok:active {
+	background-color: #70ACB1;
+}
+</style>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+		
+		<!-- Channel Plugin Scripts -->
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "fca736d4-fb37-47ee-a22f-4533d8676e38"
+  });
+</script>
+<!-- End Channel Plugin -->
+</th:block>
+
+
+<div layout:fragment="content" style="margin-top: 27px;">
+	<!-- 예약 안 했을 경우 출력 X -->
+	<div th:if="${count != 0}" class="head"
+		style="margin-bottom: 0x; padding-bottom: 0px;">
+		<form role="form" method="post" enctype="multipart/form-data"
+			action="/match/matchNew" th:object="${matchDto}" name="match_form"
+			style="float: left; padding-left: 2px;">
+			<!--레벨-->
+			<select th:field="*{level}" class="select" name="region"
+				style="padding: 6px; padding-right: 20px; margin-right: 50px;">
+				<option value="LEVEL_ALL" selected>모든레벨</option>
+				<option value="LEVEL_A">LEVEL_A</option>
+				<option value="LEVEL_B">LEVEL_B</option>
+				<option value="LEVEL_C">LEVEL_C</option>
+				<option value="LEVEL_D">LEVEL_D</option>
+			</select>
+
+			<!--종류-->
+			<select th:field="*{type}" class="select" name="type"
+				style="padding: 6px; padding-right: 20px; margin-right: 80px;">
+				<option value="1vs1(단식)" selected>종류</option>
+				<option value="1vs1(단식)">1vs1(단식)</option>
+				<option value="2vs2(복식)">2vs2(복식)</option>
+			</select>
+
+			<button type="button" class="btn btn-cancel"
+				style="width: 120px; margin-right: 10px;"
+				onclick="location.href='/match/matchList'">취소</button>
+
+			<!-- <a href="#" data-bs-toggle="modal"	data-bs-target="#exampleModal"> -->
+			<button type="button" class="btn btn-kiwi" style="width: 120px;"
+				onclick="check();">개설하기</button>
+			<!-- </a> -->
+			<input type="hidden" th:field="*{reser_id}" id="check_crId">
+			<input type="hidden" name="_csrf" id="_csrf"
+				th:value="${_csrf.token}">
+		</form>
+
+	</div>
+
+	<div class="container">
+		<!-- container : 좌측정렬-->
+		<!-- 리스트 - 없을경우 코트예약을 먼저 해주세요. -->
+		<br>
+		<div th:each="vo : ${list}">
+			<div th:if="${memberId == vo.member.id}">
+				<!-- == list.member.id}"> -->
+				<div>
+					<div style="float: left; width: 72%;">
+						<div style="display: flex; padding-left: 2px;">
+							<div style="margin-right: 8px;"
+								th:text="${vo.reservation_time}">2022년
+								6월 22일</div>
+							<!-- DB에 있는 로컬데이터 타입 파싱 -->
+							<div th:text="${vo.court_time}">06:00</div>
+						</div>
+						<div style="display: flex;">
+							<h4
+								style="padding-right: 10px; font-weight: bold; margin-top: 5px;"
+								th:text="${vo.court.name}">주안동 배드민턴장</h4>
+							<h4
+								style="padding-right: 10px; font-weight: bold; margin-top: 5px;"
+								th:text="${vo.court_num}">코트1</h4>
+						</div>
+						<div style="display: flex;">
+							<div style="margin-right: 30px; padding-left: 2px;"
+								th:text="${vo.court.address1}">인천광역시 미추홀구 석정로 433번길 18</div>
+						</div>
+					</div>
+
+					<div
+						style="float: left; width: 28%; margin-top: 20px; text-align: center;">
+						<div id="1"></div>
+
+						 <input class="btn btn-kiwi ok court_list diss" type="button"
+							th:field="*{id}" id="001" onclick='changeBtn(this.id)'
+							style="height: 40px; background-color: #C6F1E7; color: black;"
+							value='선택하기' /> 
+
+						<script th:inline="javascript">
+							'use strict';
+							$(document).ready(function(){
+								
+								// 버튼에 임시로 넣은 id를 예약id로 변경
+								var obj = document.getElementById("001"); 							
+								/*<![CDATA[*/
+							    obj.setAttribute("id", /*[[${vo.id}]]*/);
+								/*]]>*/	
+							});
+							
+							// 코트 예약 선택했을 경우
+							function changeBtn(id) {								
+								
+								// form안에 hidden으로 만든 예약id input에 선택한 버튼의 id값인 예약id 넣어줌
+								document.getElementById('check_crId').value = id;
+								
+								// 선택한 버튼 값 변경
+								document.getElementById(id).value = "선택됨";		
+								
+								// 클래스명으로 버튼 비활성화
+								$('.court_list').attr('no', true);
+								$('.diss').attr('disabled', true);
+							}
+							</script>
+
+						<div style="display: flex; margin-top: 10px; margin-left: 23px;">
+							<div style="margin-right: 8px;">결제일시</div>
+							<div th:text="${#temporals.format(vo.pay_time, 'yyyy.MM.dd HH:mm:ss')}">2022.05.30 11:30:20</div>
+						</div>
+					</div>
+				</div>
+				<br> <br> <br> <br>
+				<hr>
+			</div>
+		</div>
+		<!-- 아직 예약을 안 한 사용자 -->
+		<div th:if="${count == 0}"
+			style="float: left; width: 925px; border: 1px solid #808080; margin-bottom: 60px; border-radius: 15px;">
+			<p
+				style="margin-top: 37px; margin-left: 50px; margin-bottom: 35px; font-weight: bold; font-size: 22px;">
+				코트를 먼저 예약해주세요 &#127992;</p>
+		</div>
+		<br>
+
+	</div>
+
+	<!-- 개설확인 모달창 - 모달창 있을 경우 post 전송 x -->
+	<!-- 
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="border: none; padding-bottom: 0px;">
+					<h5 class="modal-title" id="exampleModalLabel"
+						style="font-weight: bold;">개설확인</h5>
+				</div>
+				<div class="modal-body">
+					<label class="col-form-label">2022년 8월 30일 06:00</label> <br>
+					<label class="col-form-label"
+						style="font-weight: bold; font-size: large;">연수동 배드민턴장 코트1</label>
+					<br> <label class="col-form-label">인천광역시 연수구 청능대로 205
+						연수체육공원</label>
+					<div style="display: flex; padding-right: 5px;">
+						<div>인천</div>
+						<div>/ 연수구</div>
+						<div>/ 모든레벨</div>
+						<div>/ 1vs1</div>
+					</div>
+
+				</div>
+				<div class="modal-footer" style="border: none;">
+					<button type="button" class="btn btn-kiwi"
+						onclick="location.href='/match/matchList'">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	 -->
+	<script type="text/javascript">
+		'use strict';
+
+		function check() {
+			document.match_form.submit();
+			
+			console.log("check() 들어옴");
+		}
+	</script>
+</div>
+</html>

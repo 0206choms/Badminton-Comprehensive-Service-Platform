@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<!-- 사용자 CSS 추가-->
+<th:block layout:fragment="css">
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+		crossorigin="anonymous">
+
+	<style>
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 15%;
+	margin-right: 15%;
+}
+
+.fieldError {
+	color: #bd2130;
+}
+
+a {
+	text-decoration: none;
+}
+
+.head { /*지역, 도시, 검색창, 글쓰기 버튼*/
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-bottom: 50px;
+}
+
+.btn-kiwi {
+	background-color: #70ACB1;
+	color: white;
+	border-color: #666;
+}
+
+.btn-kiwi:hover { 
+	color: white;
+	background-color: #70ACB1;
+	border-color: #7cc
+}
+</style>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</th:block>
+
+
+<div layout:fragment="content">
+	<div class="head">
+		<!--지역 -->
+		<select class="select" name="region" style="padding: 6px; margin-right: 20px;">
+			<option value="region" selected>지역</option>
+			<option value="0">서울특별시</option>
+			<option value="1">부산광역시</option>
+			<option value="2">대구광역시</option>
+			<option value="3">인천광역시</option>
+			<option value="4">광주광역시</option>
+			<option value="5">대전광역시</option>
+			<option value="6">울산광역시</option>
+			<option value="7">세종특별시</option>
+			<option value="8">경기도</option>
+			<option value="9">강원도</option>
+			<option value="10">충청북도</option>
+			<option value="11">충청남도</option>
+			<option value="12">전라북도</option>
+			<option value="13">전라남도</option>
+			<option value="14">경상북도</option>
+			<option value="15">경상남도</option>
+			<option value="16">제주도</option>
+		</select>
+		
+		<!--도시 -->
+		<select class="select" name="region" style="padding: 6px; margin-right: 120px;">
+			<option value="city" selected>도시</option>
+			<option value="0">서울특별시</option>
+			<option value="1">부산광역시</option>
+			<option value="2">대구광역시</option>
+			<option value="3">인천광역시</option>
+			<option value="4">광주광역시</option>
+			<option value="5">대전광역시</option>
+			<option value="6">울산광역시</option>
+			<option value="7">세종특별시</option>
+			<option value="8">경기도</option>
+			<option value="9">강원도</option>
+			<option value="10">충청북도</option>
+			<option value="11">충청남도</option>
+			<option value="12">전라북도</option>
+			<option value="13">전라남도</option>
+			<option value="14">경상북도</option>
+			<option value="15">경상남도</option>
+			<option value="16">제주도</option>
+		</select>
+		
+		<!-- 검색창 -->
+		<input type="text" id="keyword" style="width: 50%; height: 36px;">
+		<button class="btn btn-outline-success" id="search"
+			style="width: 100px; margin-right: 30px">검색</button>
+		<button type="button" class="btn btn-kiwi" style="width: 120px;" onclick="location.href='/admin/market/new'">글쓰기</button>
+	</div>
+
+	<!-- 마켓 카드 -->
+	<div class="row">
+
+		<div class="col col-xl-3 col-lg-3 col-md-6"
+			style="margin-bottom: 20px">
+			<a href="marketDetail" style="text-decoration: none; color: black">
+				<div class="card" style="width: 18rem; border-color: black;">
+					<img src="/img/라켓1.jpg" class="card-img-top" alt="이미지 로딩중"
+						style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+					<div class="card-body">
+						<h5 class="card-title" style="font-weight: bold;">최고급 라켓</h5>
+						<p class="card-text">
+							5000원 <br> 인천광역시 연수구
+						</p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+
+		<div class="col col-xl-3 col-lg-3 col-md-6"
+			style="margin-bottom: 20px">
+			<a href="marketDetail" style="text-decoration: none; color: black">
+
+				<div class="card" style="width: 18rem; border-color: black;">
+					<img src="/img/셔틀콕.jpg" class="card-img-top" alt="이미지 로딩중"
+						style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+					<div class="card-body">
+						<h5 class="card-title" style="font-weight: bold;">최고급 셔틀콕</h5>
+						<p class="card-text">
+							2000원 <br> 인천광역시 남동구
+						</p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col col-xl-3 col-lg-3 col-md-6"
+			style="margin-bottom: 20px">
+			<div class="card" style="width: 18rem; border-color: black;">
+				<img src="/img/셔틀콕.jpg" class="card-img-top" alt="이미지 로딩중"
+					style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+				<div class="card-body">
+					<h5 class="card-title" style="font-weight: bold;">최고급 셔틀콕</h5>
+					<p class="card-text">
+						2000원 <br> 인천광역시 남동구
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col col-xl-3 col-lg-3 col-md-6"
+			style="margin-bottom: 20px">
+			<div class="card" style="width: 18rem; border-color: black;">
+				<img src="/img/셔틀콕.jpg" class="card-img-top" alt="이미지 로딩중"
+					style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+				<div class="card-body">
+					<h5 class="card-title" style="font-weight: bold;">최고급 셔틀콕</h5>
+					<p class="card-text">
+						2000원 <br> 인천광역시 남동구
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col col-xl-3 col-lg-3 col-md-6"
+			style="margin-bottom: 20px">
+			<div class="card" style="width: 18rem; border-color: black;">
+				<img src="/img/셔틀콕.jpg" class="card-img-top" alt="이미지 로딩중"
+					style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+				<div class="card-body">
+					<h5 class="card-title" style="font-weight: bold;">최고급 셔틀콕</h5>
+					<p class="card-text">
+						2000원 <br> 인천광역시 남동구
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<br> <br>
+	<nav aria-label="Page">
+		<ul class="pagination">
+			<li><a class="page-link" href="#" aria-label="Previous"> <span
+					aria-hidden="true" style="color: #70ACB1;">◀</span>
+			</a></li>
+			<li class="page-item"><a class="page-link" href="#"
+				style="color: black;">1</a></li>
+			<li class="page-item"><a class="page-link" href="#"
+				style="color: black;">2</a></li>
+			<li class="page-item"><a class="page-link" href="#"
+				style="color: black;">3</a></li>
+			<li class="page-item"><a class="page-link" href="#"
+				aria-label="Next" style="color: #70ACB1;"> <span
+					aria-hidden="true">▶</span>
+			</a></li>
+		</ul>
+	</nav>
+
+</div>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+<!-- 사용자 CSS 추가-->
+<th:block layout:fragment="css">
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+		crossorigin="anonymous">
+	<style>
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.fieldError {
+	color: #bd2130;
+}
+
+a {
+	text-decoration: none;
+}
+
+.btn-outline-kiwi {
+	color: black;
+	background-color: transparent;
+	background-image: none;
+	border-color: black;
+}
+
+.btn-outline-kiwi:hover {
+	color: white;
+	background-color: #70ACB1;
+	border-color: #7cc
+}
+
+.btn-outline-kiwi:focus, .btn-outline-kiwi.focus {
+	box-shadow: 0 0 0 .2rem rgba(119, 204, 204, 0.5)
+}
+
+.btn-outline-kiwi.disabled, .btn-outline-kiwi:disabled {
+	color: #7cc;
+	background-color: transparent
+}
+
+.btn-outline-kiwi:not(:disabled):not(.disabled):active,
+	.btn-outline-kiwi:not(:disabled):not(.disabled).active, .show>.btn-outline-kiwi.dropdown-toggle
+	{
+	color: #212529;
+	background-color: #70ACB1;
+	border-color: #7cc
+}
+
+.btn-outline-kiwi:not(:disabled):not(.disabled):active:focus,
+	.btn-outline-kiwi:not(:disabled):not(.disabled).active:focus, .show>.btn-outline-kiwi.dropdown-toggle:focus
+	{
+	box-shadow: 0 0 0 .2rem rgba(119, 204, 204, 0.5)
+}
+
+.btn-kiwi {
+	background-color: #70ACB1;
+	color: white;
+	border-color: #666;
+}
+
+.btn-kiwi:hover {
+	color: white;
+	background-color: #70ACB1;
+	border-color: #7cc
+}
+
+.flex-container {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.flex-container-col {
+	display:  flex;
+	flex-direction: column;
+}
+
+.ans { /*댓글*/
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-bottom: 50px;
+}
+
+img {
+	max-width: 600px;
+	max-height: 600px;
+}
+
+.profile { /*프로필 사진*/
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+</style>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</th:block>
+
+<div layout:fragment="content">
+<!-- 	<form id="frm" name="frm" method="POST" action="/market/marketDetail"> -->
+		<div class="row">
+			<div class="card" style="width: 87%; border: none;">
+				<div class="card-body" style="padding-top: 30px;">
+					<h5 th:text="${market.address}">인천광역시 연수구</h5>
+					<h4 class="card-title" style="font-weight: bold;"
+						th:text="${market.title}"></h4>
+					<p class="card-text" th:text="${market.price} +'원'">5000원</p/>
+				</div>
+			</div>
+
+			<div class="card" style="width: 13%; border: none;">
+				<div class="card-body" style="padding: 10px; padding-bottom: 0px;">
+
+					<div th:if="${memberId == market.memId} and ${#strings.equals(market.status, '판매중')}"
+						class="btn-group dropstart" style="padding-bottom: 10px;">
+						<button type="button" class="btn btn-secondary dropdown-toggle"
+							data-bs-toggle="dropdown" aria-expanded="false"
+							style="padding: 0px; background-color: transparent; border: none;">
+							<img src="/img/더보기.png"
+								style="width: 50px; height: 50px; padding-bottom: 5px;">
+						</button>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="/market/marketUpdate/"
+								th:attrappend="href=${market.id}">수정</a></li>
+							<li><a class="dropdown-item" href="/market/marketDelete/"
+								th:attrappend="href=${market.id}">삭제</a></li>
+						</ul>
+					</div>
+
+					<p>
+						<input type="hidden" id="like_id" name="like_id" th:value="${market.id}"> 
+						<input type="hidden" id="like_status" name="like_status" th:value="${likeStatus}"> 
+						<button type="button" class="btm_image" id="btn_like" style="background-color: transparent; border: none;">
+							<img th:src="*{likeStatus == 0} ? @{/img/빈하트.png} : @{/img/하트.png}" alt="좋아요" th:style="${likeStatus == 0 ? 'width: 120%; height: 120%; padding-bottom: 0px; padding-right: 5px;' : 'width: 80%; height: 80%; padding-bottom: 0px; padding-right: 5px;'}">
+						</button>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+		<div class="flex-container" style="padding-left: 12px;">
+			<div
+				style="display: flex; flex-direction: column; justify-content: flex-start; width: 8%; height: 100%">
+				<img class="profile"
+					th:src="*{market.memImg} != null ? *{market.memImg} : @{/img/kiwiLogo2.png}"
+					alt="kiwi"
+					style="margin-right: 10px; object-fit: cover; border-radius: 30%; overflow: hidden;">
+			</div>
+			<div class="flex-container-col">
+				<div class="flex-container">
+					<h5
+						style="margin-left: 15px; padding-right: 15px; font-weight: bold"
+						th:text="${market.memName}">작성자</h5>
+					<label th:text="${'LEVEL-' + level}"
+						style="background-color: #C6F1E7; padding: 5px; border-color: black; border: 1px solid black; margin-right: 10px;">LEVEL_A</label>
+					<label
+						style="background-color: #70ACB1; padding: 5px; border-color: black; border: 1px solid black; color: white">골든키위</label>
+				</div>
+				<div class="flex-container"
+					style="margin-left: 15px; align-items: flex-end;">
+					<h5 th:text="${market.regTime}">YYYY-MM-DD HH:mm:ss형식으로 출력할거에용</h5>
+					<form class="signup-form" action="/market/pay" role="form" method="post" th:object="${marketDto}" name="marketBuy_form">
+					<input type="hidden" id="id" name="id" th:value="${market.id}"> 
+					<input type="hidden" id="title" name="title" th:value="${market.title}"> 
+					<input type="hidden" id="price" name="price" th:value="${market.price}"> 
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					<button th:if="${memberId == market.buy_memId} and ${#strings.equals(market.status, '구매대기')}" type=button onclick="pay();" class="btn btn-kiwi" style="margin-left: 15cm;">구매완료</button>
+					<button th:if="${#strings.equals(market.status, '판매중')}" type="submit" class="btn btn-kiwi" style="margin-left: 15cm;">구매하기</button>
+					<button th:if="${memberId != market.buy_memId} and ${#strings.equals(market.status, '구매대기')}" type="submit" class="btn btn-kiwi disabled" style="margin-left: 15cm;">구매불가</button>
+					<button th:if="${memberId != market.buy_memId} and ${#strings.equals(market.status, '구매완료')}" type="submit" class="btn btn-kiwi disabled" style="margin-left: 15cm;">구매불가</button>
+					<button th:if="${memberId == market.buy_memId} and ${#strings.equals(market.status, '구매완료')}" type="submit" class="btn btn-kiwi disabled" style="margin-left: 15cm;">구매완료</button>
+					</form>
+				</div>
+			</div>
+		</div>
+<!-- </form>-->
+	<hr>
+	<div>
+		<img th:src="${market.filepath}" class="card-img-top" alt="이미지 로딩중">
+		<br> <br>
+		<div style="padding-left: 12px" th:utext="${market.detail}">내용</div>
+	</div>
+	<br>
+	<hr style="height: 5px; color: black;">
+	<h4
+		style="font-weight: bold; padding-left: 12px; padding-bottom: 5px; background-color: #C6F1E7; padding: 10px">댓글</h4>
+
+	<!-- 댓글 -->
+	<div th:each="vo : ${list}">
+		<span th:if="${vo.market.id == market.id}">
+			<div class="flex-container" style="padding-left: 12px;">
+				<div
+					style="display: flex; flex-direction: column; justify-content: flex-start; width: 8%; height: 100%">
+					<img class="profile"
+						th:src="*{vo.memImg} != null ? *{vo.memImg} : @{/img/kiwiLogo2.png}"
+						alt="kiwi"
+						style="margin-right: 10px; object-fit: cover; border-radius: 30%; overflow: hidden;">
+				</div>
+				<div class="flex-container-col">
+					<div class="flex-container">
+						<h5
+							style="padding-right: 10px; font-weight: bold; margin-top: 5px; margin-left: 15px;"
+							th:text="${vo.memName}">작성자</h5>
+						<label th:if="${vo.memId == market.memId}"
+							style="background-color: #70ACB1; padding: 5px; border-color: black; border: 1px solid black; color: white;">글쓴이</label>
+						<input type="hidden" id="comment_id" th:value="${vo.id}" /> 
+						<a th:if="${memberId == vo.memId}" type="button" id="comment-btn-delete" class="btn btn-kiwi" style="float: right; margin-left: auto; margin-right: 0px;">삭제하기</a>
+					</div>
+					<div style="width: 830px; margin-left: 15px;"
+						th:text="${vo.content}">댓글 내용 출력되어야 정상</div>
+				</div>
+			</div>
+			<hr>
+		</span>
+	</div>
+
+	<div class="ans">
+		<input type="hidden" id="market_id" th:value="${market.id}"> <input
+			type="text" id="comment-content" style="width: 100%; height: 36px;">
+		<button class="btn btn-kiwi" id="market-btn-save" style="width: 80px;">등록</button>
+	</div>
+
+	<script type="text/javascript">
+	'use strict';
+	let commentIndex = {
+    	init: function () {
+       	 $("#market-btn-save").on("click", () => {
+            this.commentSave();
+        });
+       	
+        $("#comment-btn-delete").on("click", () => {
+            this.commentDelete();
+        });
+        
+        $("#btn_like").on("click", () => {
+            this.marketLikeBtn();
+        });
+    },
+
+    // 마켓 좋아요
+    marketLikeBtn: function () {
+    	let marketIdLike = $("#like_id").val();
+        console.log("marketIdLike: >>" + marketIdLike);
+        
+        // 좋아요 상태 like_status
+        let likeStatus = $("#like_status").val();
+        console.log("marketIdLike: >>" + likeStatus);
+        
+    	$.ajax({
+    		url : "/market/marketLike",
+    		type : "post",
+    		data : {
+    			"id" : marketIdLike
+    		},
+    		// ajax csrf 토큰 적용
+    		beforeSend: function (jqXHR, settings) {
+    	           var header = $("meta[name='_csrf_header']").attr("content");
+    	           var token = $("meta[name='_csrf']").attr("content");
+    	           jqXHR.setRequestHeader(header, token);
+    		},
+    		success : function(){
+    			if(likeStatus == 0){
+    				alert("좋아요 목록에 추가되었습니다.")
+    			} else{
+    				alert("좋아요 목록에 제거되었습니다.")
+    			}
+    			
+    			window.location.href = "http://localhost/market/marketList";	
+    		},
+    		error : function(){alert("error");}
+    	});
+    	
+    },    
+    
+    // 댓글 작성
+    commentSave: function () {
+    	let marketId = $("#market_id").val();
+        console.log(marketId);
+        let comment = $("#comment-content").val();
+        console.log(">> marketId: " + marketId + ", comment: " + comment);
+        $.ajax({
+            type: "GET",
+            url: "/market/comment/${marketId}",
+            data: {
+				"marketId": marketId,
+				"content" : comment
+			},
+			success:function(){
+				 alert("댓글작성이 완료되었습니다.");
+				 window.location.reload(); // 페이지 자동 새로고침
+				 //location.href = `/market/${marketId}`;
+			},
+			error:function(){
+				alert("실패");
+	            alert(JSON.stringify(err));
+			}
+        });
+    },
+    
+    // 댓글 삭제
+    commentDelete: function () {
+        let commentId = $("#comment_id").val();
+        console.log("commentId: >>" + commentId);
+        $.ajax({
+            type: "GET",
+            url: "/market/commentDelete/${commentId}",
+            data: {
+				"commentId" : commentId
+			},
+			success:function(){
+				 alert("댓글이 삭제되었습니다.");
+				 window.location.reload(); // 페이지 자동 새로고침
+			},
+			error:function(){
+				alert("실패");
+	            alert(JSON.stringify(err));
+			}
+        });
+    }
+}
+commentIndex.init();
+</script>
+
+<script th:inline="javascript">
+
+function pay() {
+	console.log("test");
+	var market = /*[[${market}]]*/;
+	
+	$.ajax({
+		url : "/market/pay/finalResult",
+		type : "post",
+		data : {
+			id : market.id
+		},
+		// ajax csrf 토큰 적용
+		beforeSend: function (jqXHR, settings) {
+	           var header = $("meta[name='_csrf_header']").attr("content");
+	           var token = $("meta[name='_csrf']").attr("content");
+	           jqXHR.setRequestHeader(header, token);
+		},
+		success : function(){
+			alert("구매 확정 되었습니다.")
+			window.location.href = "http://localhost/market/marketList";	
+		},
+		error : function(){alert("error");}
+	});
+}
+</script>
+
+</div>
+
+</html>

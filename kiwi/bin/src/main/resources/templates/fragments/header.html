@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="header">
+	<section class="hbody">
+		<article class="nav">
+		 <div class="title"></div>
+			<ul id="menu">
+				<a href="/">
+				<img class="logo" src="/img/kiwi.png"  alt="kiwi">
+				</a>
+				<li>
+					<!-- hasAnyAuthority('ROLE_ADMIN') --> <a href="/admin/item/new">매 치</a>
+					<!-- 상품등록 -->
+				</li>
+				<li>
+					<!-- hasAnyAuthority('ROLE_ADMIN') --> <a href="/admin/items">코트예약</a>
+					<!-- 상품관리 -->
+				</li>
+				<li>
+					<!-- isAuthenticated()  /cart  장바구니--> 
+					<a href="/market">키위마켓</a> 
+				</li>
+				<li>
+					<!-- isAuthenticated() --> <a href="/orders">소곤소곤</a>
+				</li>
+				<li sec:authorize="isAnonymous()"><a href="/members/login">로그인</a>
+					<a href="/members/new">/회원가입</a></li>
+				<li sec:authorize="isAuthenticated()"><a href="/members/mypage">프로필</a>
+					<a href="/members/logout">/로그아웃</a></li>
+			</ul>
+			<i></i>
+		</article>
+	</section>
+</div>
+
+</html>

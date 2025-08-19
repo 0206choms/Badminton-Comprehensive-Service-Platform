@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<!-- 사용자 CSS 추가-->
+<th:block layout:fragment="css">
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+		crossorigin="anonymous">
+
+	<style>
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 15%;
+	margin-right: 15%;
+}
+
+.fieldError {
+	color: #bd2130;
+}
+
+a {
+	text-decoration: none;
+}
+
+.btn-kiwi {
+	background-color: #70ACB1;
+	color: white;
+	border-color: #666;
+}
+
+.box {
+	width: 150px;
+	height: 150px;
+	border-radius: 30%;
+	overflow: hidden;
+	text-align: center;
+}
+
+.profile {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.nav-link { /*탭메뉴 색 변경*/
+	color: #70ACB1;
+}
+
+.card-title { /*글자수 넘어가면 말줄임표 표시*/
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+</style>
+
+	<!-- Channel Plugin Scripts -->
+	<script>
+		(function() {
+			var w = window;
+			if (w.ChannelIO) {
+				return (window.console.error || window.console.log || function() {
+				})('ChannelIO script included twice.');
+			}
+			var ch = function() {
+				ch.c(arguments);
+			};
+			ch.q = [];
+			ch.c = function(args) {
+				ch.q.push(args);
+			};
+			w.ChannelIO = ch;
+			function l() {
+				if (w.ChannelIOInitialized) {
+					return;
+				}
+				w.ChannelIOInitialized = true;
+				var s = document.createElement('script');
+				s.type = 'text/javascript';
+				s.async = true;
+				s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+				s.charset = 'UTF-8';
+				var x = document.getElementsByTagName('script')[0];
+				x.parentNode.insertBefore(s, x);
+			}
+			if (document.readyState === 'complete') {
+				l();
+			} else if (window.attachEvent) {
+				window.attachEvent('onload', l);
+			} else {
+				window.addEventListener('DOMContentLoaded', l, false);
+				window.addEventListener('load', l, false);
+			}
+		})();
+		ChannelIO('boot', {
+			"pluginKey" : "fca736d4-fb37-47ee-a22f-4533d8676e38"
+		});
+	</script>
+	<!-- End Channel Plugin -->
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</th:block>
+
+
+<div layout:fragment="content">
+	<h4 style="margin-left: 10px;">마켓 좋아요 목록</h4>
+	<br>
+	<div class="container">
+	<div>
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+				<div class="col"></div>
+				<div class="col"></div>
+				<div class="col"></div>
+				<div class="col"></div>
+			</div>
+		</div>
+		
+		<div class="row">
+		<div></div>
+			<div class="col col-xl-3 col-lg-3 col-md-6"
+						style="margin-bottom: 40px; margin-top: 0px;float: center;" th:each="vo : ${lists}"><!--  margin-right: 20px; margin-left: 60px;  -->
+				<div th:if="${memberId == vo.memId}">
+						<a href="/market/marketDetail/"
+							th:attrappend="href=${vo.MarketId.Id}"
+							style="text-decoration: none; color: black">
+							<div class="card" style="width: 18rem; border-color: black;">
+								<img th:src="${vo.MarketId.filepath}" class="card-img-top"
+									alt="이미지 로딩중"
+									style="width: 15rem; height: 15rem; margin: auto; padding-top: 15px;">
+								<div class="card-body">
+									<h5 class="card-title" style="font-weight: bold;"
+										th:text="${vo.MarketId.title}">최고급 라켓</h5>
+									<div style="display: flex;">
+										<p class="card-text" th:text="${vo.MarketId.price} +'원'"
+											style="width: 90%;">
+											5000원 <br>
+										</p>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+
+		</div>
+	</div>
+
+	<!-- 좋아요가 없는 경우 -->
+	<div th:if="${count == 0}"
+		style="float: left; width: 925px; border: 1px solid #808080; margin-bottom: 60px; border-radius: 15px;">
+		<p
+			style="margin-top: 37px; margin-left: 50px; margin-bottom: 35px; font-weight: bold; font-size: 22px;">
+			좋아요 누른 마켓 상품이 없습니다. &#127992;</p>
+	</div>
+</div>
+
+<br>
+<Br>
+</html>

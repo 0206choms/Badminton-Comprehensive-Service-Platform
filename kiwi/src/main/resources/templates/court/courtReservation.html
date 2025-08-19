@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout1}">
+
+<head>
+	<!-- 로그인하지 않았을때 csrf가 null이므로 에러가 나타남 아래 코드 2줄로 null이 아닐경우에만 csrf 참조 하도록 수정  -->
+	<meta name="_csrf" th:content="${_csrf?.token}">
+	<meta name="_csrf_header" th:content="${_csrf?.headerName}">
+</head>
+
+<!-- 사용자 CSS 추가-->
+<th:block layout:fragment="css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+	<style>
+		.content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-left: 15%;
+			margin-right: 20%;
+		}
+
+		.fieldError {
+			color: #bd2130;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		.btn-kiwi {
+			background-color: #C6F1E7;
+			color: black;
+			width: 100px;
+			height: 65px;
+			float: left;
+			border-radius: 10%;
+			margin-left: 43px;
+			border-color: #C6F1E7;
+		}
+
+		.btn-modal {
+			background-color: #70ACB1;
+			color: white;
+			border-color: #666;
+
+		}
+
+		.date_list:focus {
+			background-color: #C6F1E7;
+		}
+
+		.date_list:checked {
+			background-color: #C6F1E7;
+		}
+
+		.wrap {
+			position: absolute;
+			left: 0;
+			bottom: 40px;
+			width: 288px;
+			height: 132px;
+			margin-left: -144px;
+			text-align: left;
+			overflow: hidden;
+			font-size: 12px;
+			font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+			line-height: 1.5;
+		}
+
+		.wrap * {
+			padding: 0;
+			margin: 0;
+		}
+
+		.wrap .info {
+			width: 286px;
+			height: 120px;
+			border-radius: 5px;
+			border-bottom: 2px solid #ccc;
+			border-right: 1px solid #ccc;
+			overflow: hidden;
+			background: #fff;
+		}
+
+		.wrap .info:nth-child(1) {
+			border: 0;
+			box-shadow: 0px 1px 2px #888;
+		}
+
+		.info .title {
+			padding: 5px 0 0 10px;
+			height: 30px;
+			background: #C6F1E7;
+			border-bottom: 1px solid #ddd;
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.name {
+			font-weight: bold;
+			float: left;
+			padding-top: 20px;
+			padding-right: 10px;
+			font-size: 22px;
+		}
+
+		.info .close {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			color: #888;
+			width: 17px;
+			height: 17px;
+			background:
+				url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+		}
+
+
+
+		.info .close:hover {
+			cursor: pointer;
+		}
+
+		.info .body {
+			position: relative;
+			overflow: hidden;
+		}
+
+		.info .desc {
+			position: relative;
+			margin: 13px 0 0 90px;
+			height: 75px;
+		}
+
+		.desc .ellipsis {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.desc .jibun {
+			font-size: 11px;
+			color: #888;
+			margin-top: -2px;
+		}
+
+		.info .img {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 60px;
+			height: 60px;
+			margin-top: 15px;
+			margin-left: 13px;
+			color: #888;
+			overflow: hidden;
+		}
+
+
+
+		.info:after {
+			content: '';
+			position: absolute;
+			margin-left: -12px;
+			left: 50%;
+			bottom: 0;
+			width: 22px;
+			height: 12px;
+			background:
+				url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+		}
+
+		.info .link {
+			color: #5085BB;
+		}
+	</style>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8d88fe30f1babaf45150d93fec381f08&libraries=clusterer"></script>
+
+	<script type="text/javascript">
+
+		$('document').ready(function () {
+
+
+
+			var lat = document.getElementById('lat');
+			lat.value = "37.40785375";
+			//console.log(lat.value);
+
+		});
+
+	</script>
+	<script th:inline="javascript">
+
+	</script>
+
+	<!-- Channel Plugin Scripts -->
+	<script>
+		(function () {
+			var w = window;
+			if (w.ChannelIO) {
+				return (window.console.error || window.console.log || function () { })('ChannelIO script included twice.');
+			}
+			var ch = function () {
+				ch.c(arguments);
+			};
+			ch.q = [];
+			ch.c = function (args) {
+				ch.q.push(args);
+			};
+			w.ChannelIO = ch;
+			function l() {
+				if (w.ChannelIOInitialized) {
+					return;
+				}
+				w.ChannelIOInitialized = true;
+				var s = document.createElement('script');
+				s.type = 'text/javascript';
+				s.async = true;
+				s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+				s.charset = 'UTF-8';
+				var x = document.getElementsByTagName('script')[0];
+				x.parentNode.insertBefore(s, x);
+			}
+			if (document.readyState === 'complete') {
+				l();
+			} else if (window.attachEvent) {
+				window.attachEvent('onload', l);
+			} else {
+				window.addEventListener('DOMContentLoaded', l, false);
+				window.addEventListener('load', l, false);
+			}
+		})();
+		ChannelIO('boot', {
+			"pluginKey": "fca736d4-fb37-47ee-a22f-4533d8676e38"
+		});
+	</script>
+	<!-- End Channel Plugin -->
+
+
+	<script th:inline="javascript">
+
+	</script>
+
+</th:block>
+
+
+<div layout:fragment="content">
+	<div class="container" style="width:2400px">
+		<input type="hidden" id="lat" name="lat" value="">
+		<!--지역 -->
+		<select class="select" name="sido" id="sido" style="padding: 6px; margin-left: 55px;margin-bottom:10px">
+		</select>
+
+		<div id="map" style="width: 1213px; height: 600px; margin-right: 80px; margin-left: 55px;"></div>
+
+		<form class="signup-form" action="/court/pay" role="form" method="post" th:object="${ReservationDto}"
+			name="reservation_form">
+			<div style="margin-left: 55px; margin-right: 80px; margin-top: 20px; width: 100%;">
+				<div
+					style="float: left; width: 1215px;border: 1px solid #808080;margin-bottom:30px;border-radius : 15px;">
+					<p id="selectCourtName" value=""
+						style="margin-top:37px;margin-left:50px;margin-bottom:5px;font-weight: bold;font-size: 22px;">
+						코트를
+						선택해주세요 &#127992;</p>
+
+					<p id="selectCourtAddress" style="margin-left:50px;margin-bottom:0px;font-size: 17px;"></p>
+					<p id="selectCourtNumber" style="margin-left:50px;margin-bottom:40px;font-size: 17px;"></p>
+				</div>
+
+				<div id="div_date"
+					style="float: left; width: 1215px;margin-left:330px; margin-bottom:30px;border-radius : 15px;">
+					<input type="hidden" id="reservation_time" name="reservation_time"
+						style="width: 280px; height: 36px; margin-bottom: 0x; padding-bottom: 0px; margin-right: 10px;">
+				</div>
+
+				<div style="float: left; width: 110px; height:600px;" id="div_courtName">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court1">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court2">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court3">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court4">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court5">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:33px" id="div_court6">
+				</div>
+				<div style="float: left; width: 110px; height:600px;margin-right:35px" id="div_court7">
+				</div>
+				<div style="float: left; width: 110px; height:600px;" id="div_court8">
+				</div>
+			</div>
+
+			<!-- 모달 -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" style="display: flex;width:400px;">
+					<div class="modal-content">
+						<div class="modal-header" style="border: none; padding-bottom: 0px;margin-left:20px">
+							<h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">장비대여</h5>
+						</div>
+						<div class="modal-body" style="height: 140px;">
+							<!-- <img src="/img/모달예시.png" style="width:400px;height:150px;"> -->
+							<div style="display: flex; padding-right: 5px;margin-left:30px;padding-top: 8px;">
+								<p style="margin-bottom: 0px; margin-top: 10px;">라켓</p>
+								<div class="input-group number-spinner"
+									style="width: 195px;display: flex;margin-left:90px; height: 40px;">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-dir="dwn"><img
+												src="/img/minus.png" style="width:20px;height:20px"></button>
+									</span>
+									<input type="text" class="form-control text-center" value="0">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-dir="up">
+											<img src="/img/plus.png" style="width:20px;height:20px">
+										</button>
+									</span>
+								</div>
+							</div>
+							<div style="display: flex; padding-right: 5px;margin-left:30px;padding-top: 30px;">
+								<p style="margin-bottom: 0px; margin-top: 10px;">셔틀콕</p>
+								<div class="input-group number-spinner2"
+									style="width: 200px;display: flex; padding-right: 5px;margin-left:74px; height: 40px;">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-dir="dwn2"><img
+												src="/img/minus.png" style="width:20px;height:20px"></button>
+									</span>
+									<input type="text" id="spinner2" class="form-control text-center" value="0">
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-dir="up2">
+											<img src="/img/plus.png" style="width:20px;height:20px">
+										</button>
+									</span>
+								</div>
+							</div>
+							<input type="hidden" id="court_id" name="court_id">
+							<input type="hidden" id="court_name" name="court_name" value="">
+							<input type="hidden" id="court_time" name="reservation_info" value="">
+							<input type="hidden" id="racket" name="racket" value="0">
+							<input type="hidden" id="shuttlecock" name="shuttlecock" value="0">
+							<input type="hidden" id="btnNum" name="btnNum">
+							<input type="hidden" id="searchText" name="searchText">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+						</div>
+						<div class="modal-footer" style="border: none">
+							<button type="submit" class="btn btn-modal">확인
+							</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</form>
+
+
+		<br> <Br> <br> <br> <Br> <br>
+
+
+		<script th:inline="javascript">
+			$(document).ready(function () {
+
+				// 지도 위 셀렉트 박스 출력에 대한 코드 
+				var area0 = ["시/도 선택", "서울특별시", "인천광역시", "대전광역시", "광주광역시", "대구광역시", "울산광역시", "부산광역시", "경기도", "강원도", "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주도"];
+				$("select[name^=sido]").each(function () {
+					$selsido = $(this);
+					$.each(eval(area0), function () {
+						$selsido.append("<option value='" + this + "'>" + this + "</option>");
+						//console.log(this);
+					});
+
+				});
+
+				// 시/도 선택시 해당 지역으로 좌표 변경
+				$("select[name^=sido]").change(function () {
+					var area = "area" + $("option", $(this)).index($("option:selected", $(this))); // 선택지역의 구군 Array
+					if (area == "area1") {
+						panTo(37.486137, 127.042414);
+					} else if (area == "area2") {
+						panTo(37.47457949, 126.6226689);
+					} else if (area == "area3") {
+						panTo(36.33173992, 127.3448267);
+					} else if (area == "area4") {
+						panTo(35.1595454, 126.8526012);
+					} else if (area == "area5") {
+						panTo(35.34928218, 129.318896);
+					} else if (area == "area6") {
+						panTo(35.34928218, 129.318896);
+					} else if (area == "area7") {
+						panTo(35.210957, 128.972213);
+					} else if (area == "area8") {
+						panTo(37.332808, 126.868024);
+					} else if (area == "area9") {
+						panTo(37.332808, 126.868024);
+					} else if (area == "area10") {
+						panTo(37.332808, 126.868024);
+					} else if (area == "area11") {
+						panTo(36.10044663, 127.4804214);
+					} else if (area == "area12") {
+						panTo(35.95764191, 126.9520666);
+					} else if (area == "area13") {
+						panTo(34.93964829, 127.5207066);
+					} else if (area == "area14") {
+						panTo(36.094549, 128.429805);
+					} else if (area == "area15") {
+						panTo(34.97931331, 128.3107228);
+					} else if (area == "area16") {
+						panTo(34.97931331, 128.3107228);
+					}
+				});
+
+
+
+				var court_id = 0;
+
+
+				/*<![CDATA[*/
+				var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+					mapOption = {
+						center: new kakao.maps.LatLng(37.40785375, 126.6325097), // 지도의 중심좌표
+						//center: latlng, // 지도의 중심좌표
+						level: 7 // 지도의 확대 레벨
+					};
+
+				var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+				var imageSrc = "/img/bad2.png";
+				// 마커 이미지의 이미지 크기 입니다
+				var imageSize = new kakao.maps.Size(40, 40);
+
+				// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+				var mapTypeControl = new kakao.maps.MapTypeControl();
+
+				// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+				// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+				map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+				// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+				var zoomControl = new kakao.maps.ZoomControl();
+				map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+
+				// 마커 클러스터러를 생성합니다 
+				var clusterer = new kakao.maps.MarkerClusterer({
+					map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+					averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+					minLevel: 10 // 클러스터 할 최소 지도 레벨 
+				});
+
+
+				// 코트장에 대한 정보를 마커로 찍기 위해서 foreach문 돌림
+				/*[# th:each="court : ${courtList}"]*/
+
+				// 마커 이미지를 생성합니다    
+				var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+				var markers = [];
+				var data = /*[[${court}]]*/;
+				//console.log(data);
+				//console.log(data.lat);
+
+				displayMarker(data);
+				clusterer.addMarkers(markers);
+
+				/*[/]*/
+
+				// 지도에 마커를 표시하는 함수입니다    
+				function displayMarker(data) {
+
+					var l = new kakao.maps.LatLng(data.lat, data.lng);
+					var marker = new kakao.maps.Marker({
+						map: map,
+						position: l,
+						image: markerImage // 마커 이미지 
+					});
+					var overlay = new kakao.maps.CustomOverlay({
+						yAnchor: 3,
+						map: map,
+						position: marker.getPosition()
+					});
+
+					var wrap = document.createElement('div');
+					//wrap.innerHTML = data.name;
+					wrap.className = "wrap";
+
+					var info = document.createElement('div');
+					info.className = "info";
+
+					wrap.appendChild(info);
+
+					var title = document.createElement('div');
+					title.className = "title";
+					sometext = document.createTextNode(data.name);
+
+					title.appendChild(sometext);
+					info.append(title);
+
+					var close = document.createElement('div');
+					close.className = "close";
+					close.title = '닫기';
+					close.onclick = function () {
+						overlay.setMap(null);
+					};
+					title.appendChild(close);
+
+					var body = document.createElement('div');
+					body.className = "body";
+					info.appendChild(body);
+
+					var imgDiv = document.createElement('div');
+					imgDiv.className = "img";
+					body.appendChild(imgDiv);
+
+					var img = document.createElement('img');
+					img.className = "image";
+					img.src = "/img/kiwi.png";
+					// img.width="40";
+					// img.height="40";
+					imgDiv.appendChild(img);
+
+					var desc = document.createElement('div');
+					desc.className = "desc";
+					body.appendChild(desc);
+
+					var ellipsis = document.createElement('div');
+					ellipsis.className = "ellipsis";
+
+					var text = document.createTextNode(data.address1);
+
+					ellipsis.appendChild(text);
+
+					desc.appendChild(ellipsis);
+
+					var jibun = document.createElement('div');
+					jibun.className = "jibun ellipsis";
+
+					var text2 = document.createTextNode(data.call_number);
+
+					jibun.appendChild(text2);
+
+					desc.appendChild(jibun);
+
+					var footerDev = document.createElement('div');
+
+					desc.appendChild(footerDev);
+
+					var link = document.createElement('a');
+					link.className = "link";
+
+					var text3 = document.createTextNode("구장 정보 보기");
+
+					link.appendChild(text3);
+					//link.target = "_blank";
+					link.href = "/court/info/" + data.id;
+
+					footerDev.appendChild(link);
+
+					overlay.setContent(wrap);
+					markers.push(marker);
+					kakao.maps.event.addListener(marker, 'click', function () {
+						court_id = data.id;
+						overlay.setMap(map);
+						document.getElementById('selectCourtName').innerHTML = data.name;
+						document.getElementById('selectCourtName').value = data.name;
+						document.getElementById('selectCourtAddress').innerHTML = data.address1;
+						document.getElementById('selectCourtNumber').innerHTML = data.call_number;
+						document.getElementById('court_id').value = data.id;
+						document.getElementById('court_name').value = data.name;
+						
+
+						var currentDay = new Date();
+						var theMonth = currentDay.getMonth()+1;
+						var theDate = currentDay.getDate();
+						//console.log("======>theMonth : " + theMonth);
+						//console.log("======>theDate : " + theDate);
+
+						var theToday = "2022년 "+theMonth+"월 "+theDate+"일";
+						//console.log("======>theToday : " + theToday);
+						
+						getBtn(theToday);
+						getDate();
+						
+						
+						btnDisable(theToday, data.id);
+						document.getElementById('searchText').value = theToday;
+					});
+				}
+
+
+				// 지도를 변경하는 함수
+				function panTo(x, y) {
+					// 이동할 위도 경도 위치를 생성합니다 
+					var moveLatLon = new kakao.maps.LatLng(x, y);
+
+					// 지도 중심을 부드럽게 이동시킵니다
+					// 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+					map.panTo(moveLatLon);
+				}
+
+
+
+			});
+
+
+			// 마커(코트장) 클릭 했을때 버튼 생성
+			function getBtn(date) {
+				var str_court = ""; var str_court2 = ""; var str_court3 = ""; var str_court4 = ""; var str_court5 = ""; var str_court6 = ""; var str_court7 = ""; var str_court8 = ""; var str_courtName = "";
+				for (var i = 0; i < 6; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 06:00 ~ 08:00">06:00 <br>~08:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court = str_court + html_btn + '\n';
+				}
+				$('#div_court1').html(str_court);
+
+				for (var i = 6; i < 12; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 08:00 ~ 10:00">08:00 <br>~10:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court2 = str_court2 + html_btn + '\n';
+				}
+				$('#div_court2').html(str_court2);
+
+				for (var i = 12; i < 18; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 10:00 ~ 12:00">10:00 <br>~12:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court3 = str_court3 + html_btn + '\n';
+				}
+				$('#div_court3').html(str_court3);
+
+				for (var i = 18; i < 24; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 12:00 ~ 14:00">12:00 <br>~14:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court4 = str_court4 + html_btn + '\n';
+				}
+				$('#div_court4').html(str_court4);
+
+				for (var i = 24; i < 30; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 14:00 ~ 16:00">14:00 <br>~16:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court5 = str_court5 + html_btn + '\n';
+				}
+				$('#div_court5').html(str_court5);
+
+				for (var i = 30; i < 36; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 16:00 ~ 18:00" >16:00 <br>~18:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court6 = str_court6 + html_btn + '\n';
+				}
+				$('#div_court6').html(str_court6);
+
+				for (var i = 36; i < 42; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px" onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 18:00 ~ 20:00" >18:00 <br>~20:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court7 = str_court7 + html_btn + '\n';
+				}
+				$('#div_court7').html(str_court7);
+
+				for (var i = 42; i < 48; i++) {
+					var html_btn = '<button type="button" id = "btn' + i + '" class="btn btn-kiwi" style="margin-left:0;margin-bottom:30px"  onclick="noSelectCourt(this.id);" value="코트' + ((i % 6) + 1) + ' 20:00 ~ 22:00">20:00 <br>~22:00</button>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_court8 = str_court8 + html_btn + '\n';
+				}
+				$('#div_court8').html(str_court8);
+
+				// 버튼 옆에 코트1, 코트2, 코트3 생성하는 반복문
+				for (var i = 1; i < 7; i++) {
+					var html_btn = '<p style="float: left;margin-bottom:42px;padding-top:20px"class="name">코트' + i + '</p>';
+
+					html_btn = html_btn.replace('{}', i);
+					str_courtName = str_courtName + html_btn + '\n';
+				}
+				$('#div_courtName').html(str_courtName);
+
+
+
+				// 아래는 시간 구하는 코드(현재 시간을 구한뒤 현재 시간이 예약시간보다 클경우 버튼 비활성화)
+				var Now = new Date();  /* 현재 시간 */
+				var nowHour = Now.getHours();
+				var nowMins = Now.getMinutes();
+				//console.log(nowHour + " " + nowMins);
+
+				/* 시, 분 앞에 0을 붙이는 함수 -> 계산하기 위해서! */
+				function pluszero(time) {
+					var time = time.toString();	// 시간을 숫자에서 문자로 바꿈 
+					if (time.length < 2) {	// 2자리보다 작다면
+						time = '0' + time;	// 숫자 앞에 0을 붙여줌
+						return time;		// 0을 붙여서 값을 리턴
+					} else {
+						return time;	// 2자리이상이면 리턴
+					}
+				}
+				nowHour = pluszero(nowHour);
+				nowMins = pluszero(nowMins);
+				//console.log(nowHour + " " + nowMins);
+
+				var nowTime = nowHour + nowMins;
+				//console.log(nowTime);
+				
+				// 오늘 날짜 하나만 받아와서 if문 안에 넣기
+				var currentDay = new Date();
+				var today = ''+currentDay.getDate();
+				console.log("=================>today : " + today);
+				
+				var clickDay = ''+date;
+				//console.log("=================>click : " + clickDay);
+				//console.log("=================>substring : " + clickDay.substring(10,12));
+				var clickDaySubstring = clickDay.substring(10,12);
+				//console.log("=================>clickDaySubstring : " + clickDaySubstring);
+				//console.log("=================>includes : " + clickDay.includes(today));
+				
+				// 오늘 날짜 기준으로 시간이 변하면 코트 비활성화
+				if(clickDaySubstring.includes(today)){
+					if (0600 <= nowTime && 0800 >= nowTime) {
+						for (var i = 0; i <= 5; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+					} else if (0800 <= nowTime && 1000 >= nowTime) {
+						for (var i = 0; i <= 11; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+					} else if (1000 <= nowTime && 1200 >= nowTime) {
+						for (var i = 0; i <= 17; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+
+					} else if (1200 <= nowTime && 1400 >= nowTime) {
+						for (var i = 0; i <= 23; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+
+					} else if (1400 <= nowTime && 1600 >= nowTime) {
+						for (var i = 0; i <= 29; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+					} else if (1600 <= nowTime && 1800 >= nowTime) {
+						for (var i = 0; i <= 35; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+					} else if (1800 <= nowTime && 2000 >= nowTime) {
+						for (var i = 0; i <= 41; i++) {
+							(function (i) {
+								var btn = document.getElementById('btn' + i);
+								btn.disabled = true;
+								btn.style.backgroundColor = '#D3D3D3';
+								btn.style.borderColor = '#808080';
+							})(i);
+						}
+					}
+					else if (2000 <= nowTime && 2200 >= nowTime) {
+						  for (var i = 0; i <= 47; i++){
+						      (function (i) {
+						          var btn = document.getElementById('btn'+i);
+						          btn.disabled = true;
+						 		 btn.style.backgroundColor = '#D3D3D3';
+						 		 btn.style.borderColor = '#808080';
+						      })(i);
+						  }
+					}
+					
+				} 
+				
+				
+				
+				/*]]>*/
+			}
+
+			// 코트 예약 테이블을 바탕으로 버튼 비활성화
+			function btnDisable(date, id) {
+				/*[# th:each="reser : ${reserList}"]*/
+				var getReser = /*[[${reser}]]*/;
+
+				if (date == getReser.reservation_time) {
+					if (id == getReser.court.id) {
+						var btn = document.getElementById(getReser.btnNum);
+						btn.disabled = true;
+						btn.style.backgroundColor = '#D3D3D3';
+						btn.style.borderColor = '#808080';
+					}
+				}
+
+				/*[/]*/
+			}
+
+			// 코트예약 일주일 날짜
+			function getDate() {
+
+				var str_court = "";
+				// 현재 날짜 가져와서 파싱
+				var currentDay = new Date();
+				var theYear = currentDay.getFullYear();
+				var theMonth = currentDay.getMonth();
+				var theDate = currentDay.getDate();
+				var theDayOfWeek = currentDay.getDay();
+				var week = ['일', '월', '화', '수', '목', '금', '토'];
+				var day6 = [];
+				var dateBtnValue = [];
+				
+
+				for (var i = 0; i < 6; i++) {
+					var resultDay = new Date(theYear, theMonth, theDate + i);
+					var yyyy = resultDay.getFullYear();
+					var mm = Number(resultDay.getMonth()) + 1;
+					var dd = resultDay.getDate();
+					var gg = resultDay.getDay();
+
+					// 1~9까지는 앞에 0을 붙임
+					mm = String(mm).length === 1 ? '0' + mm : mm;
+					dd = String(dd).length === 1 ? '0' + dd : dd;
+
+					day6[i] = yyyy + '년 ' + mm + '월 ' + dd + '일';
+					dateBtnValue[i] = dd + "(" + week[gg] + ")";
+					//console.log("=========== : " + day6[i]);
+					//console.log("=========== : " + dateBtnValue[i]);
+					//console.log("=========== : " + dateBtnValue[i].substring(3,4));
+				}
+
+				for (var i = 0; i < 6; i++) {
+					// 요일이 일요일이면 색갈 빨간색
+					if(dateBtnValue[i].includes('일')){
+						var html_btn = '<input class="btn date_list" type="button" id="' + day6[i] + '" onclick="changeBtn(this.id)" style="height: 90px; width:90px; font-size: 23px;  color: red;" value="' + dateBtnValue[i] + '" />';
+						html_btn = html_btn.replace('{}', i);
+					}
+					// 요일이 일요일이면 색갈 파란색
+					else if(dateBtnValue[i].includes('토')){
+						var html_btn = '<input class="btn date_list" type="button" id="' + day6[i] + '" onclick="changeBtn(this.id)" style="height: 90px; width:90px; font-size: 23px;  color: blue;" value="' + dateBtnValue[i] + '" />';
+						html_btn = html_btn.replace('{}', i);
+					} 
+					// 나머지 요일 검정색
+					else {
+						var html_btn = '<input class="btn date_list" type="button" id="' + day6[i] + '" onclick="changeBtn(this.id)" style="height: 90px; width:90px; font-size: 23px;  color: black;" value="' + dateBtnValue[i] + '" />';
+						html_btn = html_btn.replace('{}', i);
+					}
+					str_court = str_court + html_btn + '\n';
+				}
+
+				$('#div_date').html(str_court);
+
+			}
+
+			// 날짜 버튼을 선택했을 경우
+			function changeBtn(id) {
+				var date = id;
+				getBtn(date);
+				
+				// form안에 hidden으로 만든 매치날짜 input에 선택한 버튼의 id값인 매치 날짜 넣어줌
+				document.getElementById('searchText').value = id;
+
+				var event = jQuery.Event("keypress", { keyCode: 13 });
+
+				$("#searchText").trigger(event);
+
+				btnDisable(id, court_id.value);
+			}
+
+			// 코트장을 선택하지 않고 예약을 하려고 할때
+			function noSelectCourt(id) {
+				var name = document.getElementById('court_name');
+				var btn = document.getElementById(id);
+				var court_time = document.getElementById('court_time');
+				if (name.value == "") {
+					alert("예약 장소를 선택하세요!");
+					return false;
+				}
+				court_time.value = btn.value;
+				$("#exampleModal").modal("show");
+
+				var btnNum = document.getElementById('btnNum');
+				btnNum.value = id;
+				//console.log("==============" + btnNum.value);
+			}
+			
+			
+
+			// 코트 예약할 시간(버튼)을 클릭했을때 모달 정보를 넘기기 위한 코드(라켓)
+			$(document).on('click', '.number-spinner button', function () {
+				var btn = $(this),
+					oldValue = btn.closest('.number-spinner').find('input').val().trim(),
+					racket = 0;
+
+				if (btn.attr('data-dir') == 'up') {
+					racket = parseInt(oldValue) + 1;
+				} else {
+					if (oldValue > 1) {
+						racket = parseInt(oldValue) - 1;
+					} else {
+						racket = 0;
+					}
+				}
+				btn.closest('.number-spinner').find('input').val(racket);
+				document.getElementById('racket').value = racket;
+
+			});
+
+			// 코트 예약할 시간(버튼)을 클릭했을때 모달 정보를 넘기기 위한 코드(셔틀콕)
+			$(document).on('click', '.number-spinner2 button', function () {
+				var btn = $(this),
+					oldValue = btn.closest('.number-spinner2').find('input').val().trim(),
+					shuttlecock = 0;
+
+				if (btn.attr('data-dir') == 'up2') {
+					shuttlecock = parseInt(oldValue) + 1;
+				} else {
+					if (oldValue > 1) {
+						shuttlecock = parseInt(oldValue) - 1;
+					} else {
+						shuttlecock = 0;
+					}
+				}
+				btn.closest('.number-spinner2').find('input').val(shuttlecock);
+				document.getElementById('shuttlecock').value = shuttlecock;
+			});
+
+		</script>
+
+	</div>
+</div>
+
+
+</html>

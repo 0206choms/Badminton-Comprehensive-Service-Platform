@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>회원가입</title>
+	<meta charset="utf-8">
+	
+	<!-- 로그인하지 않았을때 csrf가 null이므로 에러가 나타남 아래 코드 2줄로 null이 아닐경우에만 csrf 참조 하도록 수정  -->
+	<meta name="_csrf" th:content="${_csrf?.token}">
+	<meta name="_csrf_header" th:content="${_csrf?.headerName}">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="/signup/css/style.css">
+	
+	<style>
+		.form-group label {
+			font-family: Poppins-Bold;
+			font-size: 14px;
+			color: #333333;
+			line-height: 1.5;
+		}
+		.form-group button {
+			background-color: #70ACB1;
+		}
+		.fieldError {
+            color: #bd2130;
+        }
+	</style>
+	
+	<!-- Channel Plugin Scripts -->
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "fca736d4-fb37-47ee-a22f-4533d8676e38"
+  });
+</script>
+<!-- End Channel Plugin -->
+	
+    
+</head>
+
+<body style="background-color:#C6F1E7;">
+	<section class="ftco-section" >
+		<div class="container">
+			 <!--  <div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Sign Up #01</h2>
+				</div> 
+			</div> -->
+			<div class="row justify-content-center"  >
+				<div class="col-md-7 col-lg-6 col-xl-5">
+					<div class="login-wrap p-4 p-md-5" >
+						<h3 class="mb-4 text-center" >추가정보 
+			
+							 <div style="text-align : center;">
+							 
+					</div> 
+					</h3>
+						
+						<!-- <a href="#" class="img d-flex align-items-center justify-content-center"><span class="fa fa-user-o"></span></a> -->
+						<form class="signup-form" th:object="${oauthAddInfoDto}" action="/members/login/addInfo" role="form" method="post" name="join_form">
+							
+							<div class="form-group mb-4">
+								<label class="label" th:for="pnum">전화번호</label>
+								<input type="text" class="form-control" th:field="*{pnum}" placeholder="010-1234-5678">
+							</div>
+							
+							<div class="form-group mb-4" >
+								  <label class="label" th:for="bname" style="margin-bottom: 15px">환불 계좌은행</label>
+								  <br>
+								  <select class="form-select" th:field="*{bname}" aria-label="Default select example" style="padding-top:5px">
+								  <option value="">은행</option>
+									<option th:each="bname : ${bnames}" th:value="${bname}" th:text="${bname}"></option>
+								  </select>
+								  <br>
+								  <br>
+								   <label class="label" th:for="bnumber" >환불 계좌번호</label>
+								  <input type="text" th:field="*{bnumber}" class="form-control" placeholder="계좌번호">
+								  <br>
+								  <label class="label" th:for="address" style="margin-bottom: 15px">위치</label>
+								  <br>
+								  
+								  <select class="form-select " th:field="*{address}" aria-label="Default select example" style="padding-top:5px">
+									<option value="">지역</option>
+									<option th:each="address : ${local}" th:value="${address}" th:text="${address}"></option>
+								  </select>
+								  
+							</div>
+							
+							<div class="d-flex mb-4 align-items-center">
+								<label class="control control--checkbox mb-0">
+									<input type="checkbox" id="agree" />
+									<span class="caption">키위 이용약관, 개인정보 수집 및 이용 위치기반서비스 이용약관에 모두 동의합니다.</span>
+								</label>
+							  </div>
+					
+				
+							<div class="form-group">
+								<!--  <button type="button" onclick="formCheck();" class="btn btn-primary rounded submit p-3">완료</button> -->
+								<button type="button" onclick="formCheck()" class="btn btn-primary rounded submit p-4">완료</button>
+							</div>
+							
+							
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="/signup/js/jquery.min.js"></script>
+	<script src="/signup/js/popper.js"></script>
+	<script src="/signup/js/bootstrap.min.js"></script>
+	<script src="/signup/js/main.js"></script>
+
+</body>
+ <script th:inline="javascript">
+         $(document).ready(function (){
+            var errorMessage = [[${errorMessage}]];
+            
+            console.log(errorMessage);
+            if(errorMessage != null){
+                alert(errorMessage);
+            } 
+            
+            
+        }); 
+         
+         
+          function formCheck(){
+         	var agree = document.getElementById('agree');
+         	
+         	if(!agree.checked){
+         		alert("약관 동의를 체크하세요.");
+         		agree.focus();
+         		return false;
+         	}
+         	document.join_form.submit();
+         	var Message = [[${Message}]];
+         	if(Message != null){
+         		alert(Message);
+         	}
+         } 
+        </script>
+
+</html>

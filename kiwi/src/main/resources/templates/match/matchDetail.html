@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+
+<!-- CSS only -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+
+<link th:href="@{/css/layout1.css}" rel="stylesheet">
+
+<style>
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.fieldError {
+	color: #bd2130;
+}
+
+a {
+	text-decoration: none;
+}
+
+.btn-kiwi {
+	background-color: #70ACB1;
+	color: white;
+	border-color: #666;
+}
+
+.btn-kiwi:hover {
+	color: white;
+	background-color: #70ACB1;
+	border-color: #7cc;
+	justify-content: space-between;
+}
+
+.nav-link { /*탭메뉴 색 변경*/
+	color: #70ACB1;
+}
+
+.floBanPc1 { /*사이드바*/
+	position: fixed;
+	top: 128px; /* 윗쪽 끝에서부터의 거리 */
+	right: 50%;
+	margin-right: -650px; /* 가운데를 기준으로 오른쪽 거리 */
+	clear: left;
+	/*z-index: 20;*/
+}
+</style>
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+
+<!-- Channel Plugin Scripts -->
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "fca736d4-fb37-47ee-a22f-4533d8676e38"
+  });
+</script>
+<!-- End Channel Plugin -->
+</head>
+
+<body>
+	<div th:replace="fragments/header::header"></div>
+
+	<div class="content" style="margin-top: 25px;">
+		<div class="container">
+			<div id="carouselExampleIndicators"
+				class="carousel slide carousel-fade" data-bs-ride="carousel">
+				<div class="carousel-indicators">
+					<button type="button" data-bs-target="#carouselExampleIndicators"
+						data-bs-slide-to="0" class="active" aria-current="true"
+						aria-label="Slide 1"></button>
+					<button type="button" data-bs-target="#carouselExampleIndicators"
+						data-bs-slide-to="1" aria-label="Slide 2"></button>
+					<button type="button" data-bs-target="#carouselExampleIndicators"
+						data-bs-slide-to="2" aria-label="Slide 3"></button>
+				</div>
+
+				<div class="carousel-inner">
+					<div class="carousel-item active" data-bs-interval="2000">
+						<img src="/img/구장1.png" style="width: 930px; height: 550px;">
+					</div>
+					<div class="carousel-item" data-bs-interval="2000">
+						<img src="/img/구장2.png" style="width: 930px; height: 550px;">
+					</div>
+					<div class="carousel-item" data-bs-interval="2000">
+						<img src="/img/구장3.png" style="width: 930px; height: 550px;">
+					</div>
+				</div>
+
+				<button class="carousel-control-prev" type="button"
+					data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+
+				<button class="carousel-control-next" type="button"
+					data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+			<br>
+
+			<div>
+
+
+				<div style="float: left; width: 70%;">
+					<!-- 탭 메뉴 -->
+					<ul class="nav nav-tabs justify-content-start"
+						style="padding: 0px; width: 600px;">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="userinfo-tab"
+								data-bs-toggle="tab" data-bs-target="#userinfo" type="button"
+								role="tab" aria-controls="userinfo" aria-selected="true">진행방식</button>
+
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="myreview-tab" data-bs-toggle="tab"
+								data-bs-target="#myreview" type="button" role="tab"
+								aria-controls="myreview" aria-selected="false">구장시설</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="wishlist-tab" data-bs-toggle="tab"
+								data-bs-target="#wishlist" type="button" role="tab"
+								aria-controls="wishlist" aria-selected="false">매치안내</button>
+						</li>
+					</ul>
+
+					<!-- 내용 -->
+					<div class="tab-content" id="myTabContent"
+						style="padding-top: 20px; width: 600px;">
+						<!-- 진행방식 -->
+						<div class="tab-pane fade show active" id="userinfo"
+							role="tabpanel" aria-labelledby="userinfo-tab"
+							style="margin-left: 10px;">
+							<div
+								style="border: 1px solid black; float: left; width: 100px; height: 100px; text-align: center; background-color: #C6F1E7">
+								<img src="/img/진행방식.png" style="margin-top: 5px;">
+								<div style="font-weight: bold;" th:text="${matchs.type}">1vs1
+									(단식)</div>
+							</div>
+							<div
+								style="border: 1px solid black; float: left; width: 100px; height: 100px; text-align: center; background-color: #C6F1E7; margin-left: 90px;">
+								<img src="/img/진행방식.png" style="margin-top: 5px;">
+								<div style="font-weight: bold;" th:text="${matchs.level}">모든레벨</div>
+							</div>
+							<br> <br> <br> <br> <br>
+							<div style="line-height: 30px;">
+								- 매치 중에는 꼭 운동화를 신어주세요.<br> - 2vs2 매치일 경우는 현장에서 직접 팀을 나눠주세요.<br>
+								- 친구끼리와도 다른 팀이 될 수 있습니다. <br>
+							</div>
+						</div>
+
+						<!-- 구장시설 -->
+						<div class="tab-pane fade" id="myreview" role="tabpanel"
+							aria-labelledby="myreview-tab">
+							<div style="float: left; text-align: center;">
+								<!-- 카카오 맵 -->
+								<!-- <div id="map" style="width: 500px; height: 300px;"></div> -->
+								  <img src="/img/지도예시.png"
+									style="margin-top: 5px; width: 500px; height: 300px;"> 
+							
+							<!--  
+							<div id="map" style="width: 500px; height: 300px;"></div>
+									<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8d88fe30f1babaf45150d93fec381f08"></script>
+									<script>
+										var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+   								 		mapOption = { 
+        											center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        											level: 7 // 지도의 확대 레벨
+   										 };
+
+										var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+										// 마커가 표시될 위치입니다 
+										var markerPosition  = new kakao.maps.LatLng(33.450701, 126.570667); 
+
+										// 마커를 생성합니다
+										var marker = new kakao.maps.Marker({
+   												 position: markerPosition
+												});
+
+										// 마커가 지도 위에 표시되도록 설정합니다
+										marker.setMap(map);
+
+										// 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+										// marker.setMap(null);    
+										function relayout() {    
+    
+    								// 지도를 표시하는 div 크기를 변경한 이후 지도가 정상적으로 표출되지 않을 수도 있습니다
+    								// 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다 
+    // window의 resize 이벤트에 의한 크기변경은 map.relayout 함수가 자동으로 호출됩니다
+    map.relayout();
+}
+										
+										
+									</script>	
+									-->
+									
+									
+									
+							</div>
+							<br> <br> <br> <br> <br> <br> <br>
+							<br> <br> <br> <br> <br> <br> <br>
+
+							<div
+								style="border: 1px solid black; float: left; width: 120px; height: 100px; text-align: center; background-color: #C6F1E7; margin-left: 18px;">
+								<div style="margin-top: 25px;">휴관일</div>
+								<div style="font-weight: bold;"
+									th:text="${matchs.reservation.court.holiday}">매주 월요일</div>
+							</div>
+
+							<div
+								style="border: 1px solid black; float: left; width: 120px; height: 100px; text-align: center; background-color: #C6F1E7; margin-left: 50px;">
+								<div style="margin-top: 25px;">유료사용여부</div>
+								<div style="font-weight: bold;">Y</div>
+							</div>
+
+							<div
+								style="border: 1px solid black; float: left; width: 120px; height: 100px; text-align: center; background-color: #C6F1E7; margin-left: 50px;">
+								<div style="margin-top: 25px;">전화번호</div>
+								<div style="font-weight: bold;"
+									th:text="${matchs.reservation.court.call_number}">032-870-2330</div>
+							</div>
+							<br> <br> <br> <br> <br>
+							<div style="font-weight: bold;">시설 이용 주의 사항</div>
+							<div style="margin-top: 5px; line-height: 30px;">
+								- 키위에서 진행하는 모든 매치 중, 코트 이용 시 마스크 필수 착용입니다.<br> - 현장 상황에 따라
+								주차장 이용이 어려울 수 있습니다. <br>&nbsp;(배드민턴 구장 직원을 통해 주차권을 받으실 수
+								있습니다.)<br> - 흡연 부스 외에는 모두 금연 시설 입니다. <br>&nbsp;(흡연구역
+								외에서 흡연 적발 시 서비스 이용에 제한이 있을 수 있습니다.)<br> - 배드민턴 물품 및 배드민턴화
+								대여 여부는 배드민턴 구장마다 다르므로 구장 안내데스크 지원에게 문의해주세요!
+							</div>
+						</div>
+
+						<!--  매치안내 -->
+						<div class="tab-pane fade" id="wishlist" role="tabpanel"
+							aria-labelledby="wishlist-tab">
+							<div style="font-weight: bold;">매치 안내 사항</div>
+							<div style="margin-top: 5px; line-height: 30px;">
+								- 사전 연락 없이 매치에 참여하지 않으셔도 환불은 불가합니다. <br>&nbsp;(또한 향후 키위 서비스
+								이용에 재한이 있을 수도 있습니다.)<br> - 음주 및 흡연과 코트에 오물을 투처하는 행위를 금지합니다.<br>
+								- 배드민턴 외의 행위를 금지합니다. <br>&nbsp;(족구, 퀵보드, 반려동물 동반 입장 등)<br>
+								- 매치가 확정되었지만 진행에 변동 사항이 있을 경우, 매치 시작 1시간 전까지 안내해드립니다.<br> -
+								실외 매치 시 기상악화로 인한 경기가 취소될 경우, 경기가 종료될 수 있으며, 진행되지 않은 시간은 키위캐시로
+								환불해 드릴 예정입니다.
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div style="float: left; width: 30%;">
+
+					<!-- 사이드 바 -->
+					<div class="col col-xl-3 col-lg-3 col-md-6 " style="float: left;">
+						<div class="card" style="width: 280px; border-color: black;">
+							<div class="card-body">
+								<form role="form" method="get" enctype="multipart/form-data"
+									action="/match/matchsReservation" th:object="${matchsReservationDto}" name="mr_form">
+									<div style="display: flex;">
+										<h6 class="card-title"
+											th:text="${matchs.reservation.reservation_time}">2022년
+											8월 30일 6:00</h6>
+										<!-- DB에 있는 로컬데이터 타입 파싱 -->
+										<h6 class="card-title"
+											th:text="${matchs.reservation.court_time}"
+											style="margin-left: 5px;">06:00</h6>
+									</div>
+
+									<h5 style="font-weight: bold;"
+										th:text="${matchs.reservation.court.name}">연수동 배드민턴장 코트1</h5>
+									<h5 style="font-weight: bold;"
+										th:text="${matchs.reservation.court_num}">연수동 배드민턴장 코트1</h5>
+									<div th:text="${matchs.reservation.court.address1}">인천광역시
+										연수구 청능대로 205 연수체육공원</div>
+									<div style="float: left;" th:text="${matchs.type} +' /&nbsp;'">1vs1(단식)</div>
+									<div style="float: left;" th:text="${matchs.level}">/
+										모든레벨</div>
+									<br>
+									<hr>
+									<div style="font-weight: bold; float: left; font-size: large;">5000원
+									</div>
+									<div style="float: left;">&nbsp;/ 2시간</div>
+									<input type="hidden" id="matchs_id" name="mathcshId" th:value="${matchs.id}"/> <br> <br>
+									<button type="submit" id="mrSave" class="btn btn-kiwi submit"
+										style="width: 250px;">신청하기</button>
+									<!-- onclick="location.href='/cash/court'" -->
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<br> <Br>
+
+
+		</div>
+		<br> <Br> <br>
+
+		<script type="text/javascript">
+		// 'use strict';
+		// let mrIndex = {
+	    // 	init: function () {
+	    //    	 $("#mrSave").on("click", () => {
+	    //         this.mrSave();
+	    //     });
+	    // },
+	    
+	    // // 매치 신청하기
+		// mrSave: function () {
+	    // 	let matchs_id = $("#matchs_id").val();
+	    //     console.log(matchs_id);
+	    //     $.ajax({
+	    //         type: "GET",
+	    //         url: "/match/matchsReservation", // "/match/matchDetail/${mathcshId}"
+	    //         data: {
+		// 			"mathcshId": matchs_id,
+		// 		},
+		// 		success:function(){
+		// 			 alert("매치가 신청되었습니다.");
+		// 			 location.href = `/cash/court`;
+		// 		},
+		// 		error:function(){
+		// 			alert("실패");
+		//             alert(JSON.stringify(err));
+		// 		}
+	    //     });
+	        
+		//    }
+	    // }
+	    
+	    // mrIndex.init();
+		</script>
+		
+	</div>
+
+
+
+
+	<div th:replace="fragments/footer::footer"></div>
+	
+</body>
+</html>
+

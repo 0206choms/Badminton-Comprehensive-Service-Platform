@@ -1,0 +1,209 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>키위</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			font-size: 1rem;
+			line-height: 1.5;
+			color: #333;
+			overflow-x: hidden;
+		}
+
+		.vid-header {
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			color: black;
+		}
+
+		.container {
+			max-width: 960px;
+			padding-left: 1rem;
+			padding-right: 1rem;
+			margin: auto;
+			text-align: center;
+		}
+
+		.fullscreen-vid-wrap {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		.fullscreen-vid-wrap video {
+			min-width: 100%;
+			min-height: 100%;
+		}
+
+		.header-overlay {
+			height: 100vh;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			background-color: #225470;
+			z-index: 1;
+			opacity: 0.45;
+		}
+
+		.header-footer {
+			height: 60%;
+			width: 60%;
+			position: absolute;
+			bottom: 20%;
+			left: 20%;
+			background-color: #225470;
+			background-color: rgba(255, 255, 255, 0.45);
+			z-index: 2;
+			text-align: right;
+			padding: 1rem 10rem;
+
+		}
+
+		.header-footer img {
+			opacity: 0.45;
+			background-color: #225470;
+		}
+
+		.header-content {
+			z-index: 3;
+		}
+
+		.header-content h1 {
+			font-size: 50px;
+			margin-bottom: 0;
+
+		}
+
+		.header-content p {
+			font-size: 1.5rem;
+			display: block;
+			padding-bottom: 2rem;
+		}
+
+		.btn {
+			color: black;
+			font-size: 1.5rem;
+			padding: 1rem 2rem;
+
+		}
+		
+		.logo {
+			padding: 5px 2rem;
+			left: 30%;
+			height: 13%;
+			width: 13%;
+		
+		}
+		
+		.logoA {
+			text-decoration: none;
+			
+			
+		}
+
+		@media(max-width:960px) {
+			.container {
+				padding-right: 3rem;
+				padding-left: 3rem;
+			}
+		}
+	</style>
+	<!-- Channel Plugin Scripts -->
+<script>
+  (function() {
+    var w = window;
+    if (w.ChannelIO) {
+      return (window.console.error || window.console.log || function(){})('ChannelIO script included twice.');
+    }
+    var ch = function() {
+      ch.c(arguments);
+    };
+    ch.q = [];
+    ch.c = function(args) {
+      ch.q.push(args);
+    };
+    w.ChannelIO = ch;
+    function l() {
+      if (w.ChannelIOInitialized) {
+        return;
+      }
+      w.ChannelIOInitialized = true;
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://cdn.channel.io/plugin/ch-plugin-web.js';
+      s.charset = 'UTF-8';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+    if (document.readyState === 'complete') {
+      l();
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', l);
+    } else {
+      window.addEventListener('DOMContentLoaded', l, false);
+      window.addEventListener('load', l, false);
+    }
+  })();
+  ChannelIO('boot', {
+    "pluginKey": "fca736d4-fb37-47ee-a22f-4533d8676e38"
+  });
+</script>
+<!-- End Channel Plugin -->
+</head>
+
+<body>
+
+	<header class="vid-header container">
+		<div class="fullscreen-vid-wrap">
+			<video th:src="${videoUrl}" muted autoplay loop></video>
+		</div>
+	  <div class="header-overlay"> 
+		</div>
+		<div class="header-content">
+			<h1>나만의 배드민턴 매칭 서비스 플랫폼 KiWi</h1>
+			<p>
+				쉽고 빠르게 예약해보세요.
+			</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="/match/matchList" class="btn">매치</a>
+			<a href="/court/reservation" class="btn">코트예약</a>
+			<a href="/market/marketList" class="btn">키위마켓</a>
+			<a href="https://app.gather.town/app/QzY1PVfgtOza8exE/kiwi" class="btn">소곤소곤</a>
+			<br>
+			<br>
+			<a href="http://pf.kakao.com/_RxcnVxj" class="logoA">
+				<img class="logo" src="img/kakaotalk.png" alt="kakaotalk">
+			</a>
+			<a sec:authorize="isAnonymous()" href="/members/login" class="logoA">
+				<img class="logo" src="img/person.png" alt="person">
+			</a>
+			<a sec:authorize="isAuthenticated()" href="/members/mypage" class="logoA">
+				<img class="logo" src="img/person.png" alt="person">
+			</a>
+		</div>
+		  <div class="header-footer">
+		
+			
+		</div>
+		
+	</header>
+
+
+
+</body>
+
+</html>
