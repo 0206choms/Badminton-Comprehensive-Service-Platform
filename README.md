@@ -24,7 +24,7 @@
 기존 서비스의 문제점으로는 지인이 아닐 경우 SNS을 이용하여 같이 경기할 사람을 구해야하는 번거로움과 선 결제 방식이 아니라 생기는 노쇼(no-show)발생, 동호회 및 클럽 가입에 대한 부담감이 있었습니다. <br>
 
 ## 📋 시스템구성 및 기능
-<img src="libs/menu.png"> <br>
+<img src="kiwi/libs/menu.png"> <br>
 
 - 매칭시스템 : 동호회 가입에 대한 부담감 감소
 - 레벨시스템 : 경기 레벨 차이를 최소화
@@ -38,68 +38,68 @@
 ## 💻 프로젝트 구현
 
 ### [ 메인 ]
-<img src="libs/1.png">
+<img src="kiwi/libs/1.png">
 <br>
 
 ### [ 챗봇 ]
-<img src="libs/2.png">
-<img src="libs/3.png">
+<img src="kiwi/libs/2.png">
+<img src="kiwi/libs/3.png">
 <br>
 
 ### [ 회원가입 & 로그인 ]
-<img src="libs/4.png">
-<img src="libs/5.png">
-<img src="libs/6.png">
+<img src="kiwi/libs/4.png">
+<img src="kiwi/libs/5.png">
+<img src="kiwi/libs/6.png">
 <Br>
 
 ### [ 매치 ]
-<img src="libs/7.png">
-<img src="libs/8.png">
-<img src="libs/9.png">
-<img src="libs/10.png">
-<img src="libs/11.png">
+<img src="kiwi/libs/7.png">
+<img src="kiwi/libs/8.png">
+<img src="kiwi/libs/9.png">
+<img src="kiwi/libs/10.png">
+<img src="kiwi/libs/11.png">
 <br>
 
 ### [ 코트예약 ]
-<img src="libs/12.png">
-<img src="libs/13.png">
-<img src="libs/14.png">
-<img src="libs/15.png">
-<img src="libs/16.png">
-<img src="libs/17.png">
-<img src="libs/18.png">
-<img src="libs/19.png">
+<img src="kiwi/libs/12.png">
+<img src="kiwi/libs/13.png">
+<img src="kiwi/libs/14.png">
+<img src="kiwi/libs/15.png">
+<img src="kiwi/libs/16.png">
+<img src="kiwi/libs/17.png">
+<img src="kiwi/libs/18.png">
+<img src="kiwi/libs/19.png">
 <br>
 
 ### [ 키위마켓 ] 
-<img src="libs/20.png">
-<img src="libs/21.png">
-<img src="libs/22.png">
-<img src="libs/23.png">
-<img src="libs/24.png">
-<img src="libs/25.png">
-<img src="libs/26.png">
-<img src="libs/27.png">
+<img src="kiwi/libs/20.png">
+<img src="kiwi/libs/21.png">
+<img src="kiwi/libs/22.png">
+<img src="kiwi/libs/23.png">
+<img src="kiwi/libs/24.png">
+<img src="kiwi/libs/25.png">
+<img src="kiwi/libs/26.png">
+<img src="kiwi/libs/27.png">
 <br>
 
 ### [ 소곤소곤 ] 
-<img src="libs/28.png">
-<img src="libs/29.png">
+<img src="kiwi/libs/28.png">
+<img src="kiwi/libs/29.png">
 <br>
 
 ### [ 프로필 ]
-<img src="libs/30.png">
-<img src="libs/31.png">
-<img src="libs/32.png">
-<img src="libs/33.png">
-<img src="libs/34.png">
-<img src="libs/37.png">
-<img src="libs/38.png">
+<img src="kiwi/libs/30.png">
+<img src="kiwi/libs/31.png">
+<img src="kiwi/libs/32.png">
+<img src="kiwi/libs/33.png">
+<img src="kiwi/libs/34.png">
+<img src="kiwi/libs/37.png">
+<img src="kiwi/libs/38.png">
 <br>
 
 ### [ 결제 ] 
-<img src="libs/35.png">
-<img src="libs/36.png">
+<img src="kiwi/libs/35.png">
+<img src="kiwi/libs/36.png">
 <br><Br>
 <hr>
 <Br>
